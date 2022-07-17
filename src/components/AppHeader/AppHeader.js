@@ -1,13 +1,10 @@
-import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
-import {WebSocketContext} from '../WebSockets/WebSocket';
-import {useContext} from "react";
+import {AppBar, Avatar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
+import {useSelector} from "react-redux";
+import {getUserName} from "../../app/gameSlice";
 
 const AppHeader = () => {
-    const ws = useContext(WebSocketContext);
 
-    function clickTest(ev) {
-        ws.sendMessage('abc', {message: 'Hi there'})
-    }
+    const userName = useSelector(getUserName);
 
     return (
         <Box sx={{flexGrow: 1}}>
@@ -22,9 +19,10 @@ const AppHeader = () => {
                     >
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                        Viktorina
+                        Викторина
                     </Typography>
-                    <Button color="inherit" onClick={clickTest}>Login</Button>
+
+                    <Button color="inherit"><Avatar sx={{mr: 1}}/>{userName}</Button>
                 </Toolbar>
             </AppBar>
         </Box>
