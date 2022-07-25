@@ -17,6 +17,14 @@ function outMessage(action, payload) {
 export const socketMiddleware = (storeAPI) => {
     let socket = null;
 
+    function sendUpdateName() {
+        socket.send(
+            outMessage(
+                GameEvent.UpdateName,
+                {'name': storeAPI.getState().game.userName})
+        );
+    }
+
     return next => action => {
         const isConnectionEstablished = socket && storeAPI.getState().game.isConnected;
 
@@ -44,12 +52,12 @@ export const socketMiddleware = (storeAPI) => {
 
         }
 
+        if (gameActions.connectionEstablished.match(action)) {
+            sendUpdateName();
+        }
+
         if (gameActions.nameUpdated.match(action) && isConnectionEstablished) {
-            socket.send(
-                outMessage(
-                    GameEvent.UpdateName,
-                    {'name': storeAPI.getState().game.userName})
-            );
+            sendUpdateName();
         }
 
         return next(action);
