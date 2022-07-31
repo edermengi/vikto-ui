@@ -1,15 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit'
+import storage from "./storage";
 
-
-function randomUserName() {
-    return 'User ' + Math.floor(Math.random() * 100);
-}
 
 const initialState = {
     isConnected: false,
     isEstablishingConnection: false,
-    userName: randomUserName(),
-    activeUsers: ["me", "he", "she"]
+    userName: storage.getUserName(),
+    userId: storage.getUserId(),
+    activeUsers: ["me", "he", "she"],
+    isNewGameStarting: false,
+    isGameActive: false,
+    gameId: null
 }
 
 const postsSlice = createSlice({
@@ -28,11 +29,24 @@ const postsSlice = createSlice({
             console.log('Slice on close');
             state.isConnected = false;
         }),
-        nameUpdated(state, action) {
-            state.userName = action.payload;
+        nameUpdated: ((state, action) => {
+            let userName = action.payload;
+            state.userName = userName;
+            storage.setUserName(userName)
             console.log('In Name updated', JSON.stringify(action));
+        }),
+        newGameStarting: (state => {
+            console.log('Reducer: new Game starting');
+            state.isNewGameStarting = true;
+            state.isGameActive = false;
+        }),
+        newGameStarted: ((state, action) => {
+            state.isNewGameStarting = false;
+            state.isGameActive = true;
+            state.gameId = action.payload.gameId;
+            console.log(`Reducer: new Game started ${state.gameId}`);
+        }),
 
-        }
     }
 })
 
@@ -43,4 +57,5 @@ export default postsSlice.reducer;
 
 export const getUserName = (state) => state.game.userName;
 export const getIsConnected = (state) => state.game.isConnected;
+export const isNewGameStarting = (state) => state.game.isNewGameStarting;
 

@@ -1,10 +1,11 @@
 import {WS_URL} from './config';
 import {gameActions} from "./gameSlice";
+import storage from "./storage";
 
 export class GameEvent {
     static NewGame = '$newGame'
     static ExitGame = '$exitGame'
-    static UpdateName = '$updateName'
+    static UpdateUser = '$updateUser'
 }
 
 function outMessage(action, payload) {
@@ -14,14 +15,31 @@ function outMessage(action, payload) {
     });
 }
 
+function inMessage(data) {
+    return JSON.parse(data);
+}
+
 export const socketMiddleware = (storeAPI) => {
     let socket = null;
 
     function sendUpdateName() {
         socket.send(
             outMessage(
-                GameEvent.UpdateName,
-                {'name': storeAPI.getState().game.userName})
+                GameEvent.UpdateUser,
+                {
+                    userId: storeAPI.getState().game.userId,
+                    userName: storeAPI.getState().game.userName
+                })
+        );
+    }
+
+    function startNewGame() {
+        socket.send(
+            outMessage(
+                GameEvent.NewGame,
+                {
+                    userId: storeAPI.getState().game.userId
+                })
         );
     }
 
@@ -29,7 +47,7 @@ export const socketMiddleware = (storeAPI) => {
         const isConnectionEstablished = socket && storeAPI.getState().game.isConnected;
 
         if (gameActions.startConnecting.match(action)) {
-            socket = new WebSocket(WS_URL);
+            socket = new WebSocket(WS_URL + `?userId=${storage.getUserId()}`);
 
             socket.onopen = (message) => {
                 console.log('Socket on connect ' + message);
@@ -46,7 +64,12 @@ export const socketMiddleware = (storeAPI) => {
             };
 
             socket.onmessage = (message) => {
-                console.log('Socket on message ' + message);
+                console.log('Socket on message ' + message.data);
+                const data = inMessage(message.data);
+                switch (data.action) {
+                    case GameEvent.NewGame:
+                        storeAPI.dispatch(gameActions.newGameStarted(data.data));
+                }
             };
 
 
@@ -58,6 +81,10 @@ export const socketMiddleware = (storeAPI) => {
 
         if (gameActions.nameUpdated.match(action) && isConnectionEstablished) {
             sendUpdateName();
+        }
+
+        if (gameActions.newGameStarting.match(action) && isConnectionEstablished) {
+            startNewGame();
         }
 
         return next(action);
