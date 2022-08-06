@@ -7,7 +7,7 @@ const initialState = {
     isEstablishingConnection: false,
     userName: storage.getUserName(),
     userId: storage.getUserId(),
-    activeUsers: ["me", "he", "she"],
+    activePlayers: [],
     isNewGameStarting: false,
     isGameActive: false,
     gameId: null
@@ -44,7 +44,8 @@ const postsSlice = createSlice({
             state.isNewGameStarting = false;
             state.isGameActive = true;
             state.gameId = action.payload.gameId;
-            console.log(`Reducer: new Game started ${state.gameId}`);
+            state.activePlayers = action.payload.players;
+            console.log(`Reducer: new Game started ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
 
     }
@@ -60,4 +61,5 @@ export const getIsConnected = (state) => state.game.isConnected;
 export const isNewGameStarting = (state) => state.game.isNewGameStarting;
 export const isGameActive = (state) => state.game.isGameActive;
 export const getGameId = (state) => state.game.gameId;
+export const getActivePlayers = (state) => state.game.activePlayers;
 
