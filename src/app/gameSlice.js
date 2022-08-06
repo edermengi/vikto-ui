@@ -58,4 +58,6 @@ export default postsSlice.reducer;
 export const getUserName = (state) => state.game.userName;
 export const getIsConnected = (state) => state.game.isConnected;
 export const isNewGameStarting = (state) => state.game.isNewGameStarting;
+export const isGameActive = (state) => state.game.isGameActive;
+export const getGameId = (state) => state.game.gameId;
 

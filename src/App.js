@@ -5,7 +5,8 @@ import {Provider} from "react-redux";
 import store from "./app/store";
 import React from 'react'
 
-import {BrowserRouter, Route, Routes,} from 'react-router-dom'
+import {BrowserRouter, Navigate, Route, Routes,} from 'react-router-dom'
+
 import Game from "./components/Game/Game";
 
 function App() {
@@ -17,9 +18,10 @@ function App() {
                         <AppHeader></AppHeader>
                         <Routes>
                             <Route path="/" element={<Board></Board>}/>
-                            <Route path="games">
+                            <Route path="game">
                                 <Route path=":gameId" element={<Game></Game>}/>
                             </Route>
+                            <Route path="*" element={<Navigate to ="/" />}/>
                         </Routes>
                     </div>
                 </div>

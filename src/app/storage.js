@@ -21,8 +21,10 @@ function setItem(key, val) {
     localStorage.setItem(key, val);
 }
 
-export default {
+const storage = {
     getUserId: () => getOrDefault(USER_ID, uuid),
     getUserName: () => getOrDefault(USER_NAME, randomUserName),
     setUserName: (name) => setItem(USER_NAME, name)
 };
+
+export default storage;
