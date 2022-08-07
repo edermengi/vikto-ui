@@ -30,15 +30,19 @@ const postsSlice = createSlice({
             state.isConnected = false;
         }),
         nameUpdated: ((state, action) => {
-            let userName = action.payload;
+            let userName = action.payload.userName;
             state.userName = userName;
-            storage.setUserName(userName)
             console.log('In Name updated', JSON.stringify(action));
         }),
         newGameStarting: (state => {
             console.log('Reducer: new Game starting');
             state.isNewGameStarting = true;
             state.isGameActive = false;
+        }),
+        gameJoining: ((state, action) => {
+            console.log('Reducer: Game joining' + JSON.stringify(action.payload));
+            state.isGameActive = false;
+            state.gameId = action.payload.gameId
         }),
         newGameStarted: ((state, action) => {
             state.isNewGameStarting = false;
@@ -47,7 +51,17 @@ const postsSlice = createSlice({
             state.activePlayers = action.payload.players;
             console.log(`Reducer: new Game started ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
-
+        gameJoined: ((state, action) => {
+            state.isNewGameStarting = false;
+            state.isGameActive = true;
+            state.gameId = action.payload.gameId;
+            state.activePlayers = action.payload.players;
+            console.log(`Reducer:  Game joined ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
+        }),
+        gameStateNotification: ((state, action) => {
+            state.activePlayers = action.payload.players;
+            console.log(`Reducer:  Game notification ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
+        }),
     }
 })
 

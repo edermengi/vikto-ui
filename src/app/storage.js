@@ -1,4 +1,5 @@
 import {v4 as uuid} from "uuid";
+import {gameActions} from "./gameSlice";
 
 const USER_ID = 'user-id'
 const USER_NAME = 'user-name'
@@ -28,3 +29,12 @@ const storage = {
 };
 
 export default storage;
+
+export const localStorageMiddleware = (storeAPI) => {
+    return next => action => {
+        if (gameActions.nameUpdated.match(action)) {
+            storage.setUserName(action.payload.userName);
+        }
+        return next(action);
+    }
+}

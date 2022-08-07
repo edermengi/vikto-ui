@@ -18,7 +18,7 @@ export default function UserDialog() {
     }
 
     const handleSave = () => {
-        store.dispatch(gameActions.nameUpdated(updUserName));
+        store.dispatch(gameActions.nameUpdated({'userName': updUserName}));
         setOpen(false);
     };
 
