@@ -5,16 +5,20 @@ import {gameActions, isNewGameStarting, isGameActive, getGameId} from "../../app
 import {LoadingButton} from "@mui/lab";
 import store from "../../app/store";
 import {Navigate} from "react-router-dom";
+import {useState} from "react";
+import JoinGameDialog from "./JoinGameDialog";
 
 
 const Board = () => {
 
-    const newGameStarting = useSelector(isNewGameStarting)
-    const gameActive = useSelector(isGameActive)
-    const gameId = useSelector(getGameId)
+    const newGameStarting = useSelector(isNewGameStarting);
+    const gameActive = useSelector(isGameActive);
+    const gameId = useSelector(getGameId);
+
+    const [showJoinGameDialog, setShowJoinGameDialog] = useState(false);
+    const toggleShowJoinGameDialog = () => setShowJoinGameDialog(p => !p);
 
     const handleCreateGame = () => {
-        console.log('click new game');
         store.dispatch(gameActions.newGameStarting());
     }
 
@@ -36,10 +40,12 @@ const Board = () => {
                     <Grid item xs={6}>
                         <Button variant="contained" sx={{width: '100%', height: '100%'}}
                                 startIcon={<Groups></Groups>}
+                                onClick={toggleShowJoinGameDialog}
                         >Присоединиться к игре</Button>
                     </Grid>
                 </Grid>
             </Grid>
+            <JoinGameDialog show={showJoinGameDialog} toggleShow={toggleShowJoinGameDialog}/>
         </div>
     )
 }
