@@ -25,7 +25,7 @@ const Board = () => {
     return (
         <div>
             {gameActive && (
-                <Navigate to={"game/" + gameId} replace={true}/>
+                <Navigate to={"game/" + gameId} replace={false}/>
             )}
             <Grid sx={{pt: 4, pl: 4, pr: 4}}>
                 <Grid container spacing={4}>

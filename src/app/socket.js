@@ -84,10 +84,13 @@ export const socketMiddleware = (storeAPI) => {
                 switch (data.action) {
                     case GameEvent.NewGame:
                         storeAPI.dispatch(gameActions.newGameStarted(data.data));
+                        break;
                     case GameEvent.JoinGame:
                         storeAPI.dispatch(gameActions.gameJoined(data.data));
+                        break;
                     case GameEvent.GameStateNotification:
                         storeAPI.dispatch(gameActions.gameStateNotification(data.data));
+                        break;
                 }
             };
 

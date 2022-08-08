@@ -9,7 +9,7 @@ export default function JoinGameDialog(props) {
 
     const handleJoin = () => {
         toggleShow();
-        navigate("game/" + gameId, {replace: true});
+        navigate("game/" + gameId, {replace: false});
     };
 
     const updGameId = (event) => {
