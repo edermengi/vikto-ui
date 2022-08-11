@@ -48,14 +48,12 @@ const postsSlice = createSlice({
             state.isNewGameStarting = false;
             state.isGameActive = true;
             state.gameId = action.payload.gameId;
-            state.activePlayers = action.payload.players;
             console.log(`Reducer: new Game started ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
         gameJoined: ((state, action) => {
             state.isNewGameStarting = false;
             state.isGameActive = true;
             state.gameId = action.payload.gameId;
-            state.activePlayers = action.payload.players;
             console.log(`Reducer:  Game joined ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
         gameStateNotification: ((state, action) => {

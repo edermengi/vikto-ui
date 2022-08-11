@@ -24,9 +24,9 @@ const Board = () => {
 
     return (
         <div>
-            {gameActive && (
-                <Navigate to={"game/" + gameId} replace={false}/>
-            )}
+            {/*{gameActive && (*/}
+            {/*    <Navigate to={"game/" + gameId} replace={false}/>*/}
+            {/*)}*/}
             <Grid sx={{pt: 4, pl: 4, pr: 4}}>
                 <Grid container spacing={4}>
                     <Grid item xs={6}>
@@ -44,6 +44,11 @@ const Board = () => {
                         >Присоединиться к игре</Button>
                     </Grid>
                 </Grid>
+            </Grid>
+            <Grid>
+                {gameActive && (
+                    <div>Активная игра {gameId}</div>
+                )}
             </Grid>
             <JoinGameDialog show={showJoinGameDialog} toggleShow={toggleShowJoinGameDialog}/>
         </div>
