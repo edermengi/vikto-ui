@@ -33,8 +33,8 @@ export default function JoinGameDialog(props) {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleJoin}>Присоединиться</Button>
                 <Button onClick={toggleShow}>Отменить</Button>
+                <Button onClick={handleJoin} variant="contained">Присоединиться</Button>
             </DialogActions>
         </Dialog>
     );

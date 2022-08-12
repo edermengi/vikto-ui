@@ -62,12 +62,13 @@ export default function UserDialog() {
                     >
                         <Avataar wd={200} ht={200} avatarValue={updAvatar}></Avataar>
                         <Button variant="contained" startIcon={<Refresh></Refresh>}
+                                color="success"
                                 onClick={handleRandomizeAvatar}>Random</Button>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleSave}>Сохранить</Button>
                     <Button onClick={handleCancel}>Отменить</Button>
+                    <Button onClick={handleSave} variant="contained">Сохранить</Button>
                 </DialogActions>
             </Dialog>
         </div>
