@@ -25,13 +25,14 @@ export const socketMiddleware = (storeAPI) => {
     let socket = null;
     let pendingActions = [];
 
-    function sendUpdateName(userName) {
+    function sendUpdateUser(userName, avatar) {
         socket.send(
             outMessage(
                 GameEvent.UpdateUser,
                 {
                     userId: storeAPI.getState().game.userId,
-                    userName: userName
+                    userName: userName,
+                    avatar: avatar
                 })
         );
     }
@@ -98,7 +99,7 @@ export const socketMiddleware = (storeAPI) => {
         }
 
         if (gameActions.connectionEstablished.match(action)) {
-            sendUpdateName(storage.getUserName());
+            sendUpdateUser(storage.getUserName(), storage.getAvatar());
             while (pendingActions.length) {
                 const action = pendingActions.shift();
                 action();
@@ -106,7 +107,7 @@ export const socketMiddleware = (storeAPI) => {
         }
 
         if (gameActions.nameUpdated.match(action) && isConnectionEstablished) {
-            sendUpdateName(action.payload.userName);
+            sendUpdateUser(action.payload.userName, action.payload.avatar);
         }
 
         if (gameActions.newGameStarting.match(action) && isConnectionEstablished) {

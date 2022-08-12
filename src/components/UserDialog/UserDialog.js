@@ -1,13 +1,17 @@
-import {Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
+import {Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField} from "@mui/material";
 import {useState} from "react";
 import {useSelector} from "react-redux";
-import {gameActions, getUserName} from "../../app/gameSlice";
+import {gameActions, getAvatar, getUserName} from "../../app/gameSlice";
 import store from "../../app/store";
+import {Avataar, randomAvatarValue} from "../Game/Avataar";
+import {Refresh} from "@mui/icons-material";
 
 export default function UserDialog() {
     const userName = useSelector(getUserName);
+    const avatar = useSelector(getAvatar);
     const [open, setOpen] = useState(false);
     const [updUserName, setUpdUserName] = useState(userName);
+    const [updAvatar, setUpdAvatar] = useState(avatar);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -18,7 +22,7 @@ export default function UserDialog() {
     }
 
     const handleSave = () => {
-        store.dispatch(gameActions.nameUpdated({'userName': updUserName}));
+        store.dispatch(gameActions.nameUpdated({'userName': updUserName, 'avatar': updAvatar}));
         setOpen(false);
     };
 
@@ -26,10 +30,14 @@ export default function UserDialog() {
         setUpdUserName(event.target.value);
     }
 
+    const handleRandomizeAvatar = () => {
+        setUpdAvatar(randomAvatarValue());
+    };
 
     return (
         <div>
-            <Button color="inherit" onClick={handleClickOpen}><Avatar sx={{mr: 1}}/>{userName}</Button>
+            <Button color="inherit" onClick={handleClickOpen}>
+                <Avataar sx={{mr: 1}} wd={40} ht={40} avatarValue={avatar}/>{userName}</Button>
             <Dialog
                 fullWidth
                 open={open} onClose={handleCancel}>
@@ -45,6 +53,17 @@ export default function UserDialog() {
                         value={updUserName}
                         onChange={updUserNameChange}
                     />
+                    <Grid sx={{marginTop: 1}}
+                          container
+                          direction="row"
+                          justifyContent="center"
+                          alignItems="center"
+                          spacing={2}
+                    >
+                        <Avataar wd={200} ht={200} avatarValue={updAvatar}></Avataar>
+                        <Button variant="contained" startIcon={<Refresh></Refresh>}
+                                onClick={handleRandomizeAvatar}>Random</Button>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleSave}>Сохранить</Button>

@@ -7,6 +7,7 @@ const initialState = {
     isEstablishingConnection: false,
     userName: storage.getUserName(),
     userId: storage.getUserId(),
+    avatar: storage.getAvatar(),
     activePlayers: [],
     isNewGameStarting: false,
     isGameActive: false,
@@ -21,17 +22,15 @@ const postsSlice = createSlice({
             state.isEstablishingConnection = true;
         }),
         connectionEstablished: (state => {
-            console.log('Slice on connection');
             state.isConnected = true;
             state.isEstablishingConnection = false;
         }),
         connectionClosed: (state => {
-            console.log('Slice on close');
             state.isConnected = false;
         }),
         nameUpdated: ((state, action) => {
-            let userName = action.payload.userName;
-            state.userName = userName;
+            state.userName = action.payload.userName;
+            state.avatar = action.payload.avatar;
             console.log('In Name updated', JSON.stringify(action));
         }),
         newGameStarting: (state => {
@@ -69,6 +68,7 @@ export default postsSlice.reducer;
 
 
 export const getUserName = (state) => state.game.userName;
+export const getAvatar = (state) => state.game.avatar;
 export const getIsConnected = (state) => state.game.isConnected;
 export const isNewGameStarting = (state) => state.game.isNewGameStarting;
 export const isGameActive = (state) => state.game.isGameActive;

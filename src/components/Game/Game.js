@@ -30,7 +30,7 @@ function PlayerItem(props) {
             variant="dot"
             bgcolor={props.player.online ? "#44b700" : "#a6a6a6"}
         >
-            <Avataar></Avataar>
+            <Avataar wd={60} ht={60} avatarValue={props.player.avatar}></Avataar>
         </StyledBadge>
         <div>{props.player.userName}</div>
         <div>{props.player.score}</div>
