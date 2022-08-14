@@ -11,7 +11,8 @@ const initialState = {
     activePlayers: [],
     isNewGameStarting: false,
     isGameActive: false,
-    gameId: null
+    gameId: null,
+    ready: false
 }
 
 const postsSlice = createSlice({
@@ -59,6 +60,10 @@ const postsSlice = createSlice({
             state.activePlayers = action.payload.players;
             console.log(`Reducer:  Game notification ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
+        ready: ((state) => {
+            state.ready = true;
+            console.log(`Reducer: ready`);
+        }),
     }
 })
 
@@ -74,4 +79,5 @@ export const isNewGameStarting = (state) => state.game.isNewGameStarting;
 export const isGameActive = (state) => state.game.isGameActive;
 export const getGameId = (state) => state.game.gameId;
 export const getActivePlayers = (state) => state.game.activePlayers;
+export const getReady = (state) => state.game.ready;
 

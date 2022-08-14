@@ -1,6 +1,6 @@
-import {Badge, Grid, Stack, styled} from "@mui/material";
+import {Badge, Button, Grid, Stack, styled} from "@mui/material";
 import {useSelector} from "react-redux";
-import {gameActions, getActivePlayers, getIsConnected} from "../../app/gameSlice";
+import {gameActions, getActivePlayers, getIsConnected, getReady} from "../../app/gameSlice";
 import {useParams} from "react-router-dom";
 import store from "../../app/store";
 import {useEffect} from "react";
@@ -34,6 +34,7 @@ function PlayerItem(props) {
         </StyledBadge>
         <div>{props.player.userName}</div>
         <div>{props.player.score}</div>
+        <div>{props.player.ready ? "Готов" : "Ждет"}</div>
     </div>;
 }
 
@@ -42,6 +43,7 @@ const Game = () => {
 
     const activePlayers = useSelector(getActivePlayers);
     const isConnected = useSelector(getIsConnected);
+    const ready = useSelector(getReady);
     let params = useParams();
 
     useEffect(() => {
@@ -49,6 +51,10 @@ const Game = () => {
             store.dispatch(gameActions.gameJoining({'gameId': params.gameId}));
         }
     }, [isConnected])
+
+    function handleReady() {
+        store.dispatch(gameActions.ready());
+    }
 
     return (
         <Grid sx={{pt: 4, pl: 4, pr: 4}}>
@@ -60,6 +66,12 @@ const Game = () => {
                     return <PlayerItem key={player.userId} player={player}/>
                 })}
             </Stack>
+            {!ready && activePlayers.length > 0 &&
+                <Grid>
+                    <Button variant="contained" sx={{width: '80%', height: 60}} onClick={handleReady}>Готов к
+                        игре</Button>
+                </Grid>
+            }
         </Grid>
     )
 }
