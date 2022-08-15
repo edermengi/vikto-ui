@@ -12,7 +12,8 @@ const initialState = {
     isNewGameStarting: false,
     isGameActive: false,
     gameId: null,
-    ready: false
+    ready: false,
+    gameStarted: false
 }
 
 const postsSlice = createSlice({
