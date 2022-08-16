@@ -13,7 +13,9 @@ const initialState = {
     isGameActive: false,
     gameId: null,
     ready: false,
-    gameStarted: false
+    gameStarted: false,
+    gameState: null,
+    question: null
 }
 
 const postsSlice = createSlice({
@@ -59,6 +61,8 @@ const postsSlice = createSlice({
         }),
         gameStateNotification: ((state, action) => {
             state.activePlayers = action.payload.players;
+            state.gameState = action.payload.gameState;
+            state.question = action.payload.question;
             console.log(`Reducer:  Game notification ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
         ready: ((state) => {
@@ -79,6 +83,8 @@ export const getIsConnected = (state) => state.game.isConnected;
 export const isNewGameStarting = (state) => state.game.isNewGameStarting;
 export const isGameActive = (state) => state.game.isGameActive;
 export const getGameId = (state) => state.game.gameId;
+export const getGameState = (state) => state.game.gameState;
+export const getQuestion = (state) => state.game.question;
 export const getActivePlayers = (state) => state.game.activePlayers;
 export const getReady = (state) => state.game.ready;
 
