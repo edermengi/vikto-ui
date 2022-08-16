@@ -1,16 +1,20 @@
 import {Badge, Box, Button, Grid, Paper, Stack, styled} from "@mui/material";
 import {useSelector} from "react-redux";
-import {gameActions, getActivePlayers, getGameState, getIsConnected, getQuestion, getReady} from "../../app/gameSlice";
+import {
+    gameActions,
+    getActivePlayers,
+    getAnswer,
+    getGameState,
+    getIsConnected,
+    getQuestion,
+    getReady
+} from "../../app/gameSlice";
 import {useParams} from "react-router-dom";
 import store from "../../app/store";
 import {useEffect} from "react";
 import {Avataar} from "./Avataar";
+import {ASK_QUESTION, SHOW_ANSWER, WAIT_START} from "../../app/constants";
 
-
-const WAIT_START = 'WAIT_START';
-const ASK_QUESTION = 'ASK_QUESTION';
-const SHOW_ANSWER = 'SHOW_ANSWER';
-const SHOW_WINNER = 'SHOW_WINNER';
 
 const StyledBadge = styled(Badge)((props) => ({
     '& .MuiBadge-badge': {
@@ -49,6 +53,20 @@ function PlayerItem(props) {
 
 
 function QuestionView(props) {
+    function calcColor(answerOption) {
+        if (props.gameState === ASK_QUESTION) {
+            return props.answer === answerOption.answer ? "cyan" : "lightcyan";
+        } else if (props.gameState === SHOW_ANSWER) {
+            if (answerOption.correct) {
+                return "lightgreen";
+            } else if (props.answer === answerOption.answer) {
+                return "pink";
+            } else {
+                return "lightcyan";
+            }
+        }
+    }
+
     return (
         <Grid>
             <h4 style={{color: "grey", marginBottom: 0}}>Тема: {props.question.title}</h4>
@@ -63,9 +81,15 @@ function QuestionView(props) {
                 }}
             >
                 {props.question.answerOptions.map(answerOption => {
+
                     return (
-                        <Paper sx={{height: 50, backgroundColor: "lightcyan", textAlign: "center"}}
+                        <Paper sx={{
+                            height: 50,
+                            backgroundColor: calcColor(answerOption),
+                            textAlign: "center"
+                        }}
                                elevation={4}
+                               onClick={() => props.selectAnswer(answerOption.answer)}
                                key={answerOption.answer}>
                             <span style={{
                                 verticalAlign: "middle",
@@ -91,6 +115,7 @@ const Game = () => {
     const question = useSelector(getQuestion);
     const isConnected = useSelector(getIsConnected);
     const ready = useSelector(getReady);
+    const answer = useSelector(getAnswer);
     let params = useParams();
 
     useEffect(() => {
@@ -101,6 +126,12 @@ const Game = () => {
 
     function handleReady() {
         store.dispatch(gameActions.ready());
+    }
+
+    function selectAnswer(updAnswer) {
+        if (gameState === ASK_QUESTION && !answer) {
+            store.dispatch(gameActions.answer({'answer': updAnswer}));
+        }
     }
 
     return (
@@ -119,7 +150,9 @@ const Game = () => {
                         игре</Button>
                 </Grid>
             }
-            {gameState === ASK_QUESTION && <QuestionView question={question}></QuestionView>}
+            {(gameState === ASK_QUESTION || gameState === SHOW_ANSWER) &&
+                <QuestionView question={question} selectAnswer={selectAnswer} answer={answer} gameState={gameState}/>
+            }
         </Grid>
     );
 }

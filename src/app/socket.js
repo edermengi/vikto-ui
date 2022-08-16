@@ -9,6 +9,7 @@ export class GameEvent {
     static Ready = '$ready'
     static UpdateUser = '$updateUser'
     static GameStateNotification = '$gameStateNotification'
+    static Answer = '$answer'
 }
 
 function outMessage(action, payload) {
@@ -66,6 +67,19 @@ export const socketMiddleware = (storeAPI) => {
                 {
                     gameId: storeAPI.getState().game.gameId,
                     userId: storeAPI.getState().game.userId
+                })
+        );
+
+    }
+
+    function answer(answer) {
+        socket.send(
+            outMessage(
+                GameEvent.Answer,
+                {
+                    gameId: storeAPI.getState().game.gameId,
+                    userId: storeAPI.getState().game.userId,
+                    answer: answer
                 })
         );
     }
@@ -131,6 +145,10 @@ export const socketMiddleware = (storeAPI) => {
 
         if (gameActions.ready.match(action) && isConnectionEstablished) {
             ready();
+        }
+
+        if (gameActions.answer.match(action) && isConnectionEstablished) {
+            answer(action.payload.answer);
         }
 
         return next(action);

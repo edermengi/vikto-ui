@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit'
 import storage from "./storage";
+import {ASK_QUESTION} from "./constants";
 
 
 const initialState = {
@@ -63,11 +64,18 @@ const postsSlice = createSlice({
             state.activePlayers = action.payload.players;
             state.gameState = action.payload.gameState;
             state.question = action.payload.question;
+            if (action.payload.gameState === ASK_QUESTION) {
+                state.answer = null;
+            }
             console.log(`Reducer:  Game notification ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
         ready: ((state) => {
             state.ready = true;
             console.log(`Reducer: ready`);
+        }),
+        answer: ((state, action) => {
+            state.answer = action.payload.answer;
+            console.log(`Answer: ${action.payload.answer}`);
         }),
     }
 })
@@ -87,4 +95,5 @@ export const getGameState = (state) => state.game.gameState;
 export const getQuestion = (state) => state.game.question;
 export const getActivePlayers = (state) => state.game.activePlayers;
 export const getReady = (state) => state.game.ready;
+export const getAnswer = (state) => state.game.answer;
 
