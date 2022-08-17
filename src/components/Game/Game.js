@@ -23,13 +23,6 @@ const StyledBadge = styled(Badge)((props) => ({
     }
 }));
 
-const gameNameStyle = {
-    color: 'blue'
-};
-
-const playerNoStyle = {
-    color: 'red'
-};
 
 function PlayerItem(props) {
     return <div key={props.player.userId}>
@@ -39,7 +32,7 @@ function PlayerItem(props) {
             variant="dot"
             bgcolor={props.player.online ? "#44b700" : "#a6a6a6"}
         >
-            <Avataar wd={60} ht={60} avatarValue={props.player.avatar}></Avataar>
+            <Avataar wd={45} ht={45} avatarValue={props.player.avatar}></Avataar>
         </StyledBadge>
         <div>{props.player.userName}</div>
         {props.gameState === WAIT_START &&
@@ -69,9 +62,15 @@ function QuestionView(props) {
 
     return (
         <Grid>
-            <h4 style={{color: "grey", marginBottom: 0}}>Тема: {props.question.title}</h4>
-            <h3 style={{marginTop: 0}}>{props.question.question}</h3>
-            <h2 style={{color: "blue"}}>{props.question.questionItem}</h2>
+            <h4 style={{color: "grey", marginBottom: 0, marginTop: 0}}>Тема: {props.question.title}</h4>
+            <h3 style={{marginTop: 0, marginBottom: 2}}>{props.question.question}</h3>
+            {props.question.questionItemType !== 'image' ?
+                <h2 style={{color: "blue"}}>{props.question.questionItem}</h2>
+                :
+                <img style={{width: "40%", marginTop: 0}}
+                     src={props.question.questionItem}></img>
+            }
+
             <Box
                 sx={{
                     p: 1,
@@ -101,7 +100,7 @@ function QuestionView(props) {
                                 </Grid>
                                 <Grid item xs={1}>
                                     {props.gameState === SHOW_ANSWER && answerOption.answerNo !== "0" &&
-                                        <Chip  sx={{marginTop: 1}} label={answerOption.answerNo}/>
+                                        <Chip sx={{marginTop: 1}} label={answerOption.answerNo}/>
                                     }
                                 </Grid>
                             </Grid>
@@ -143,9 +142,6 @@ const Game = () => {
 
     return (
         <Grid sx={{pt: 1, pl: 4, pr: 4}}>
-            <div>В игре <span style={gameNameStyle}>{params.gameId}</span> учавствуют <span
-                style={playerNoStyle}>{activePlayers.length}</span> человек
-            </div>
             <Stack direction="row" spacing={1} sx={{pt: 1}}>
                 {activePlayers.map(player => {
                     return <PlayerItem key={player.userId} player={player} gameState={gameState}/>
