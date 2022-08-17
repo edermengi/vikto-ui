@@ -1,4 +1,4 @@
-import {Badge, Box, Button, Grid, Paper, Stack, styled} from "@mui/material";
+import {Badge, Box, Button, Chip, Grid, Paper, Stack, styled} from "@mui/material";
 import {useSelector} from "react-redux";
 import {
     gameActions,
@@ -91,13 +91,20 @@ function QuestionView(props) {
                                elevation={4}
                                onClick={() => props.selectAnswer(answerOption.answer)}
                                key={answerOption.answer}>
-                            <span style={{
-                                verticalAlign: "middle",
-                                display: "inline-block",
-                                justifyContent: "center",
-                                lineHeight: "40px"
-                            }}>{answerOption.answer}</span>
+                            <Grid container>
+                                <Grid item xs={11}>
+                                    <span style={{
+                                        display: "inline-block",
+                                        lineHeight: "40px"
+                                    }}>{answerOption.answer}</span>
 
+                                </Grid>
+                                <Grid item xs={1}>
+                                    {props.gameState === SHOW_ANSWER && answerOption.answerNo !== "0" &&
+                                        <Chip  sx={{marginTop: 1}} label={answerOption.answerNo}/>
+                                    }
+                                </Grid>
+                            </Grid>
                         </Paper>
                     );
                 })
