@@ -133,7 +133,7 @@ function QuestionView(props) {
 function AskTopicView(props) {
     return (
         <Grid>
-            <h1 style={{color: "darkcyan"}}>Начинаем новый раунд. Выберете тему</h1>
+            <h1 style={{color: "darkcyan"}}>Начинаем новый раунд. Выберите тему</h1>
             <ImageList sx={{width: "100%"}}
                        variant="quilted"
                        cols={3}
