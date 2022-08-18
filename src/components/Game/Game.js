@@ -215,7 +215,7 @@ const Game = () => {
         if (isConnected) {
             store.dispatch(gameActions.gameJoining({'gameId': params.gameId}));
         }
-    }, [isConnected])
+    }, [])
 
     function handleReady() {
         store.dispatch(gameActions.ready());

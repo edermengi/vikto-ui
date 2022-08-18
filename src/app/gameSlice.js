@@ -64,6 +64,7 @@ const postsSlice = createSlice({
             console.log(`Reducer:  Game joined ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
         }),
         gameStateNotification: ((state, action) => {
+            state.gameId = action.payload.gameId;
             state.activePlayers = action.payload.players;
             state.gameState = action.payload.gameState;
             state.question = action.payload.question;
