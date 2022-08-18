@@ -16,7 +16,10 @@ const initialState = {
     ready: false,
     gameStarted: false,
     gameState: null,
-    question: null
+    question: null,
+    topic: null,
+    topicOptions: null,
+    winners: null
 }
 
 const postsSlice = createSlice({
@@ -64,6 +67,9 @@ const postsSlice = createSlice({
             state.activePlayers = action.payload.players;
             state.gameState = action.payload.gameState;
             state.question = action.payload.question;
+            state.topic = action.payload.topic;
+            state.topicOptions = action.payload.topicOptions;
+            state.winners = action.payload.winners
             if (action.payload.gameState === ASK_QUESTION) {
                 state.answer = null;
             }
@@ -76,6 +82,10 @@ const postsSlice = createSlice({
         answer: ((state, action) => {
             state.answer = action.payload.answer;
             console.log(`Answer: ${action.payload.answer}`);
+        }),
+        chooseTopic: ((state, action) => {
+            state.topic = action.payload.topic;
+            console.log(`Selected topic: ${action.payload.topic}`);
         }),
     }
 })
@@ -96,4 +106,7 @@ export const getQuestion = (state) => state.game.question;
 export const getActivePlayers = (state) => state.game.activePlayers;
 export const getReady = (state) => state.game.ready;
 export const getAnswer = (state) => state.game.answer;
+export const getTopic = (state) => state.game.topic;
+export const getTopicOptions = (state) => state.game.topicOptions;
+export const getWInners = (state) => state.game.winners;
 

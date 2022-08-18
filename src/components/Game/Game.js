@@ -1,4 +1,16 @@
-import {Badge, Box, Button, Chip, Grid, Paper, Stack, styled} from "@mui/material";
+import {
+    Badge,
+    Box,
+    Button,
+    Chip,
+    Grid,
+    ImageList,
+    ImageListItem,
+    ImageListItemBar,
+    Paper,
+    Stack,
+    styled
+} from "@mui/material";
 import {useSelector} from "react-redux";
 import {
     gameActions,
@@ -7,13 +19,17 @@ import {
     getGameState,
     getIsConnected,
     getQuestion,
-    getReady
+    getReady,
+    getTopic,
+    getTopicOptions, getWInners
 } from "../../app/gameSlice";
 import {useParams} from "react-router-dom";
 import store from "../../app/store";
 import {useEffect} from "react";
 import {Avataar} from "./Avataar";
-import {ASK_QUESTION, SHOW_ANSWER, WAIT_START} from "../../app/constants";
+import {ASK_QUESTION, ASK_TOPIC, SHOW_ANSWER, SHOW_TOPIC, SHOW_WINNER, WAIT_START} from "../../app/constants";
+import {CheckCircle} from "@mui/icons-material";
+import * as PropTypes from "prop-types";
 
 
 const StyledBadge = styled(Badge)((props) => ({
@@ -114,6 +130,74 @@ function QuestionView(props) {
     );
 }
 
+function AskTopicView(props) {
+    return (
+        <Grid>
+            <h1 style={{color: "darkcyan"}}>Начинаем новый раунд. Выберете тему</h1>
+            <ImageList sx={{width: "100%"}}
+                       variant="quilted"
+                       cols={3}
+                       rowHeight={121}>
+                {props.topicOptions.map(topicOption => {
+                    return (
+                        <ImageListItem key={topicOption.topic} onClick={() => props.selectTopic(topicOption.topic)}>
+                            <img src={topicOption.image} alt={topicOption.title} loading="lazy"/>
+                            <ImageListItemBar
+                                title={<span style={{
+                                    fontSize: "1.5rem",
+                                    color: "lightgoldenrodyellow"
+                                }}>{topicOption.title}</span>}
+                                actionIcon={props.gameState === ASK_TOPIC && props.topic === topicOption.topic &&
+                                    <CheckCircle sx={{color: "lightgreen"}}/>
+                                }
+                            />
+                        </ImageListItem>
+                    );
+                })}
+            </ImageList>
+        </Grid>
+    );
+}
+
+function ShowTopicView(props) {
+    return (
+        <Grid>
+            <h1 style={{color: "darkcyan"}}>Тема раунда</h1>
+            <ImageList sx={{width: "200"}}
+                       variant="quilted"
+                       cols={1}
+                       rowHeight={200}>
+                <ImageListItem>
+                    <img src={props.topic.image} alt={props.topic.title} loading="lazy"/>
+                    <ImageListItemBar
+                        title={<span style={{
+                            fontSize: "2rem",
+                            color: "lightgoldenrodyellow"
+                        }}>{props.topic.title}</span>}
+                    />
+                </ImageListItem>
+            </ImageList>
+        </Grid>
+    );
+}
+
+
+function WinnerView(props) {
+    return (
+        <Stack direction="row">
+            <h1 style={{color: "darkorange", marginTop: 70}}>В игре побеждает!</h1>
+            {props.winners.map(winner => {
+                return (
+                    <Grid>
+                        <Avataar wd={150} ht={150} avatarValue={winner.avatar}></Avataar>
+                        <h2>{winner.userName}</h2>
+                    </Grid>
+                );
+            })}
+        </Stack>
+    );
+}
+
 const Game = () => {
 
     const activePlayers = useSelector(getActivePlayers);
@@ -122,6 +206,9 @@ const Game = () => {
     const isConnected = useSelector(getIsConnected);
     const ready = useSelector(getReady);
     const answer = useSelector(getAnswer);
+    const topic = useSelector(getTopic);
+    const topicOptions = useSelector(getTopicOptions);
+    const winners = useSelector(getWInners);
     let params = useParams();
 
     useEffect(() => {
@@ -140,6 +227,12 @@ const Game = () => {
         }
     }
 
+    function selectTopic(updTopic) {
+        if (gameState === ASK_TOPIC) {
+            store.dispatch(gameActions.chooseTopic({'topic': updTopic}));
+        }
+    }
+
     return (
         <Grid sx={{pt: 1, pl: 4, pr: 4}}>
             <Stack direction="row" spacing={1} sx={{pt: 1}}>
@@ -155,6 +248,16 @@ const Game = () => {
             }
             {(gameState === ASK_QUESTION || gameState === SHOW_ANSWER) &&
                 <QuestionView question={question} selectAnswer={selectAnswer} answer={answer} gameState={gameState}/>
+            }
+            {(gameState === ASK_TOPIC) &&
+                <AskTopicView topicOptions={topicOptions} gameState={gameState} topic={topic}
+                              selectTopic={selectTopic}/>
+            }
+            {(gameState === SHOW_TOPIC) &&
+                <ShowTopicView topic={topic}/>
+            }
+            {(gameState === SHOW_WINNER) &&
+                <WinnerView winners={winners}/>
             }
         </Grid>
     );
