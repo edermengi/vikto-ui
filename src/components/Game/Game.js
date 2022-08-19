@@ -1,16 +1,4 @@
-import {
-    Badge,
-    Box,
-    Button,
-    Chip,
-    Grid,
-    ImageList,
-    ImageListItem,
-    ImageListItemBar,
-    Paper,
-    Stack,
-    styled
-} from "@mui/material";
+import {Badge, Button, Grid, ImageList, ImageListItem, ImageListItemBar, Stack, styled} from "@mui/material";
 import {useSelector} from "react-redux";
 import {
     gameActions,
@@ -21,15 +9,25 @@ import {
     getQuestion,
     getReady,
     getTopic,
-    getTopicOptions, getWInners
+    getTopicOptions,
+    getWInners
 } from "../../app/gameSlice";
 import {useParams} from "react-router-dom";
 import store from "../../app/store";
 import {useEffect} from "react";
 import {Avataar} from "./Avataar";
-import {ASK_QUESTION, ASK_TOPIC, SHOW_ANSWER, SHOW_TOPIC, SHOW_WINNER, WAIT_START} from "../../app/constants";
+import {
+    ASK_QUESTION,
+    ASK_TOPIC,
+    QUIZ_TYPE_SELECT_ONE, QUIZ_TYPE_TYPE_ONE,
+    SHOW_ANSWER,
+    SHOW_TOPIC,
+    SHOW_WINNER,
+    WAIT_START
+} from "../../app/constants";
 import {CheckCircle} from "@mui/icons-material";
-import * as PropTypes from "prop-types";
+import SelectOneView from "./SelectOneView";
+import TypeOneView from "./TypeOneView";
 
 
 const StyledBadge = styled(Badge)((props) => ({
@@ -60,75 +58,6 @@ function PlayerItem(props) {
     </div>;
 }
 
-
-function QuestionView(props) {
-    function calcColor(answerOption) {
-        if (props.gameState === ASK_QUESTION) {
-            return props.answer === answerOption.answer ? "cyan" : "lightcyan";
-        } else if (props.gameState === SHOW_ANSWER) {
-            if (answerOption.correct) {
-                return "lightgreen";
-            } else if (props.answer === answerOption.answer) {
-                return "pink";
-            } else {
-                return "lightcyan";
-            }
-        }
-    }
-
-    return (
-        <Grid>
-            <h4 style={{color: "grey", marginBottom: 0, marginTop: 0}}>Тема: {props.question.title}</h4>
-            <h3 style={{marginTop: 0, marginBottom: 2}}>{props.question.question}</h3>
-            {props.question.questionItemType !== 'image' ?
-                <h2 style={{color: "blue"}}>{props.question.questionItem}</h2>
-                :
-                <img style={{width: "40%", marginTop: 0}}
-                     src={props.question.questionItem}></img>
-            }
-
-            <Box
-                sx={{
-                    p: 1,
-                    display: 'grid',
-                    gridTemplateColumns: {md: '1fr 1fr'},
-                    gap: 1,
-                }}
-            >
-                {props.question.answerOptions.map(answerOption => {
-
-                    return (
-                        <Paper sx={{
-                            height: 50,
-                            backgroundColor: calcColor(answerOption),
-                            textAlign: "center"
-                        }}
-                               elevation={4}
-                               onClick={() => props.selectAnswer(answerOption.answer)}
-                               key={answerOption.answer}>
-                            <Grid container>
-                                <Grid item xs={11}>
-                                    <span style={{
-                                        display: "inline-block",
-                                        lineHeight: "40px"
-                                    }}>{answerOption.answer}</span>
-
-                                </Grid>
-                                <Grid item xs={1}>
-                                    {props.gameState === SHOW_ANSWER && answerOption.answerNo !== "0" &&
-                                        <Chip sx={{marginTop: 1}} label={answerOption.answerNo}/>
-                                    }
-                                </Grid>
-                            </Grid>
-                        </Paper>
-                    );
-                })
-                }
-
-            </Box>
-        </Grid>
-    );
-}
 
 function AskTopicView(props) {
     return (
@@ -247,7 +176,18 @@ const Game = () => {
                 </Grid>
             }
             {(gameState === ASK_QUESTION || gameState === SHOW_ANSWER) &&
-                <QuestionView question={question} selectAnswer={selectAnswer} answer={answer} gameState={gameState}/>
+                <>
+                    {
+                        question.quizType === QUIZ_TYPE_SELECT_ONE &&
+                        <SelectOneView question={question} selectAnswer={selectAnswer} answer={answer}
+                                       gameState={gameState}/>
+                    }
+                    {
+                        question.quizType === QUIZ_TYPE_TYPE_ONE &&
+                        <TypeOneView question={question} selectAnswer={selectAnswer} answer={answer}
+                                     gameState={gameState}/>
+                    }
+                </>
             }
             {(gameState === ASK_TOPIC) &&
                 <AskTopicView topicOptions={topicOptions} gameState={gameState} topic={topic}
