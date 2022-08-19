@@ -1,4 +1,4 @@
-import {Button, Grid, TextField} from "@mui/material";
+import {Box, Button, Grid, TextField} from "@mui/material";
 import {useState} from "react";
 import {ASK_QUESTION, SHOW_ANSWER} from "../../app/constants";
 
@@ -15,9 +15,7 @@ export default function TypeOneView(props) {
             <h3 style={{marginTop: 0, marginBottom: 2}}>{props.question.question}</h3>
             <h1 style={{color: "darkblue"}}>
                 <code>{props.gameState === ASK_QUESTION ? props.question.answerHint : props.question.answer}</code></h1>
-            <div>
-                <pre><code>{renderBr(props.question.questionItem)}</code></pre>
-            </div>
+            <pre style={{whiteSpace: "pre-wrap"}}><code>{renderBr(props.question.questionItem)}</code></pre>
             {(props.gameState === ASK_QUESTION) &&
                 <Grid>
                     <TextField
