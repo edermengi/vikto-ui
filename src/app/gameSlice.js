@@ -74,7 +74,7 @@ const postsSlice = createSlice({
             if (action.payload.gameState === ASK_QUESTION) {
                 state.answer = null;
             }
-            console.log(`Reducer:  Game notification ${state.gameId} and ${JSON.stringify(state.activePlayers)}`);
+            console.log(`Reducer:  Game notification ${state.gameId} and ${JSON.stringify(state)}`);
         }),
         ready: ((state) => {
             state.ready = true;

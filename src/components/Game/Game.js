@@ -30,10 +30,10 @@ import SelectOneView from "./SelectOneView";
 import TypeOneView from "./TypeOneView";
 
 
-const StyledBadge = styled(Badge)((props) => ({
+const StyledBadge = styled(Badge)(({bgcolor}) => ({
     '& .MuiBadge-badge': {
-        backgroundColor: props.bgcolor,
-        color: props.bgcolor
+        backgroundColor: bgcolor,
+        color: bgcolor
     }
 }));
 
