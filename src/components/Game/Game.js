@@ -1,4 +1,4 @@
-import {Badge, Button, Grid, ImageList, ImageListItem, ImageListItemBar, Stack, styled} from "@mui/material";
+import {Badge, Button, Chip, Grid, ImageList, ImageListItem, ImageListItemBar, Stack, styled} from "@mui/material";
 import {useSelector} from "react-redux";
 import {
     gameActions,
@@ -10,7 +10,7 @@ import {
     getReady,
     getTopic,
     getTopicOptions,
-    getWInners
+    getWinners
 } from "../../app/gameSlice";
 import {useParams} from "react-router-dom";
 import store from "../../app/store";
@@ -46,14 +46,15 @@ function PlayerItem(props) {
             variant="dot"
             bgcolor={props.player.online ? "#44b700" : "#a6a6a6"}
         >
-            <Avataar wd={45} ht={45} avatarValue={props.player.avatar}></Avataar>
+            <Chip avatar={<Avataar wd={40} ht={40} avatarValue={props.player.avatar}></Avataar>}
+                  label={props.player.userName} />
+
         </StyledBadge>
-        <div>{props.player.userName}</div>
         {props.gameState === WAIT_START &&
             <div>{props.player.ready ? "Готов" : "Ждет"}</div>
         }
         {props.gameState !== WAIT_START &&
-            <div>{props.player.score}</div>
+            <Chip label={props.player.score} size="small" color="info" variant="outlined"/>
         }
     </div>;
 }
@@ -137,7 +138,7 @@ const Game = () => {
     const answer = useSelector(getAnswer);
     const topic = useSelector(getTopic);
     const topicOptions = useSelector(getTopicOptions);
-    const winners = useSelector(getWInners);
+    const winners = useSelector(getWinners);
     let params = useParams();
 
     useEffect(() => {
@@ -162,6 +163,7 @@ const Game = () => {
         }
     }
 
+
     return (
         <Grid sx={{pt: 1, pl: 4, pr: 4}}>
             <Stack direction="row" spacing={1} sx={{pt: 1}}>
@@ -185,7 +187,7 @@ const Game = () => {
                     {
                         question.quizType === QUIZ_TYPE_TYPE_ONE &&
                         <TypeOneView question={question} selectAnswer={selectAnswer} answer={answer}
-                                     gameState={gameState}/>
+                                     gameState={gameState} activePlayers={activePlayers}/>
                     }
                 </>
             }

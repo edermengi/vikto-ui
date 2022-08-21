@@ -1,8 +1,9 @@
-import {Button, Grid, TextField} from "@mui/material";
+import {Button, Chip, Grid, TextField} from "@mui/material";
 import {useEffect, useState} from "react";
 import {ASK_QUESTION, SHOW_ANSWER} from "../../app/constants";
+import {Avataar} from "./Avataar";
 
-function GuessWord({puzzleWord, guessWord, gameState, answer}) {
+function GuessWord({puzzleWord, guessWord}) {
 
     function mergedPuzzleGuessChars(puzzle, guess) {
         const puzzleChars = [...puzzle.toUpperCase()];
@@ -44,16 +45,11 @@ function GuessWord({puzzleWord, guessWord, gameState, answer}) {
 
     return (
         <>
-            {gameState === ASK_QUESTION &&
-                <h1 style={{color: "darkblue"}}><code>
-                    {mergedPuzzleGuessChars(puzzleWord, guessWord).map((chItem, i) => {
-                        return <span style={{color: chItem.color}} key={chItem + i}>{chItem.ch}</span>
-                    })}
-                </code></h1>
-            }
-            {gameState === SHOW_ANSWER &&
-                <h1 style={{color: "darkblue"}}><code>{answer}</code></h1>
-            }
+            <h1 style={{color: "darkblue"}}><code>
+                {mergedPuzzleGuessChars(puzzleWord, guessWord).map((chItem, i) => {
+                    return <span style={{color: chItem.color}} key={chItem + i}>{chItem.ch}</span>
+                })}
+            </code></h1>
         </>
     );
 }
@@ -63,7 +59,8 @@ export default function TypeOneView(
         question,
         answer,
         gameState,
-        selectAnswer
+        selectAnswer,
+        activePlayers
     }) {
 
     const [updAnswer, setUpdAnswer] = useState('')
@@ -82,15 +79,29 @@ export default function TypeOneView(
         }
     }, [answer]);
 
+    function getPlayerById(userId) {
+        for (const p of activePlayers) {
+            if (p.userId === userId) {
+                return p;
+            }
+        }
+        return {};
+    }
+
     return (
         <Grid>
             <h4 style={{color: "grey", marginBottom: 0, marginTop: 0}}>Тема: {question.title}</h4>
             <h3 style={{marginTop: 0, marginBottom: 2}}>{question.question}</h3>
-            <GuessWord puzzleWord={question.answerHint}
-                       guessWord={updAnswer}
-                       gameState={gameState}
-                       answer={question.answer}
-            />
+            {gameState === ASK_QUESTION &&
+                <GuessWord puzzleWord={question.answerHint}
+                           guessWord={updAnswer}
+                />
+            }
+            {gameState === SHOW_ANSWER &&
+                <GuessWord puzzleWord={question.answer}
+                           guessWord=''
+                />
+            }
             <pre style={{whiteSpace: "pre-wrap"}}><code>{renderBr(question.questionItem)}</code></pre>
             {(gameState === ASK_QUESTION) &&
                 <Grid>
@@ -102,10 +113,28 @@ export default function TypeOneView(
                     <Button onClick={() => selectAnswer(updAnswer)}>Отправить</Button>
                 </Grid>
             }
-            {(gameState === SHOW_ANSWER) &&
-                <Grid>
-                    Ответы
-                </Grid>
+            {gameState === SHOW_ANSWER &&
+                question.answers.map((userAnswer) => {
+                    const player = getPlayerById(userAnswer.userId);
+
+                    return (
+                        <Grid container justifyContent="center" spacing={2} alignItems="center">
+                            <Grid item>
+                                    <Avataar wd={30} ht={30} avatarValue={player.avatar}></Avataar>
+                            </Grid>
+                            <Grid item>
+                                {userAnswer.answer &&
+                                    <GuessWord puzzleWord={question.answer}
+                                               guessWord={userAnswer.answer}
+                                    />
+                                }
+                            </Grid>
+                            <Grid item>
+                                <Chip label={userAnswer.score} size="Big" color="success"/>
+                            </Grid>
+                        </Grid>
+                    );
+                })
             }
         </Grid>
     );

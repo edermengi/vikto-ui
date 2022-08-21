@@ -109,5 +109,5 @@ export const getReady = (state) => state.game.ready;
 export const getAnswer = (state) => state.game.answer;
 export const getTopic = (state) => state.game.topic;
 export const getTopicOptions = (state) => state.game.topicOptions;
-export const getWInners = (state) => state.game.winners;
+export const getWinners = (state) => state.game.winners;
 
