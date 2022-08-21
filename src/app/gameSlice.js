@@ -19,7 +19,12 @@ const initialState = {
     question: null,
     topic: null,
     topicOptions: null,
-    winners: null
+    winners: null,
+    timerSeconds: 0,
+    roundNo: null,
+    questionNo: 0,
+    totalNumberOfRounds: 0,
+    totalNumberOfQuestions: 0
 }
 
 const postsSlice = createSlice({
@@ -70,7 +75,12 @@ const postsSlice = createSlice({
             state.question = action.payload.question;
             state.topic = action.payload.topic;
             state.topicOptions = action.payload.topicOptions;
-            state.winners = action.payload.winners
+            state.winners = action.payload.winners;
+            state.timerSeconds = action.payload.timerSeconds;
+            state.roundNo = action.payload.roundNo;
+            state.questionNo = action.payload.questionNo;
+            state.totalNumberOfRounds = action.payload.totalNumberOfRounds;
+            state.totalNumberOfQuestions = action.payload.totalNumberOfQuestions;
             if (action.payload.gameState === ASK_QUESTION) {
                 state.answer = null;
             }
@@ -110,4 +120,10 @@ export const getAnswer = (state) => state.game.answer;
 export const getTopic = (state) => state.game.topic;
 export const getTopicOptions = (state) => state.game.topicOptions;
 export const getWinners = (state) => state.game.winners;
+export const getTimerSeconds = (state) => state.game.timerSeconds;
+export const getQuestionNo = (state) => state.game.questionNo;
+export const getRoundNo = (state) => state.game.roundNo;
+export const getTotalNumberOfRounds = (state) => state.game.totalNumberOfRounds;
+export const getTotalNumberOfQuestions = (state) => state.game.totalNumberOfQuestions;
+
 
