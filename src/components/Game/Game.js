@@ -47,14 +47,16 @@ function PlayerItem(props) {
             bgcolor={props.player.online ? "#44b700" : "#a6a6a6"}
         >
             <Chip avatar={<Avataar wd={40} ht={40} avatarValue={props.player.avatar}></Avataar>}
-                  label={props.player.userName} />
+                  label={props.player.userName}/>
 
         </StyledBadge>
         {props.gameState === WAIT_START &&
             <div>{props.player.ready ? "Готов" : "Ждет"}</div>
         }
         {props.gameState !== WAIT_START &&
-            <Chip label={props.player.score} size="small" color="info" variant="outlined"/>
+            <div>
+                <Chip label={props.player.score} size="small" color="info" variant="outlined"/>
+            </div>
         }
     </div>;
 }
@@ -145,7 +147,7 @@ const Game = () => {
         if (isConnected) {
             store.dispatch(gameActions.gameJoining({'gameId': params.gameId}));
         }
-    }, [])
+    }, [isConnected, params.gameId])
 
     function handleReady() {
         store.dispatch(gameActions.ready());
