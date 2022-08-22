@@ -55,7 +55,9 @@ function PlayerItem(props) {
         }
         {props.gameState !== WAIT_START &&
             <div>
-                <Chip label={props.player.score} size="small" color="info" variant="outlined"/>
+                <Chip label={props.player.score} size="small" color="info"
+                      variant={(props.gameState === ASK_QUESTION && props.player.answered) ||
+                      (props.gameState === ASK_TOPIC && props.player.topicVote) ? "" : "outlined"}/>
             </div>
         }
     </div>;
@@ -63,6 +65,17 @@ function PlayerItem(props) {
 
 
 function AskTopicView(props) {
+
+    function isVoted(topic) {
+        for (const p of props.activePlayers) {
+            if (p.topicVote === topic) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     return (
         <Grid>
             <h1 style={{color: "darkcyan"}}>Начинаем новый раунд. Выберите тему</h1>
@@ -75,6 +88,7 @@ function AskTopicView(props) {
                         <ImageListItem key={topicOption.topic} onClick={() => props.selectTopic(topicOption.topic)}>
                             <img src={topicOption.image} alt={topicOption.title} loading="lazy"/>
                             <ImageListItemBar
+                                sx={{background: isVoted(topicOption.topic) ? "blue" : ""}}
                                 title={<span style={{
                                     fontSize: "1.5rem",
                                     color: "lightgoldenrodyellow"
@@ -195,7 +209,7 @@ const Game = () => {
             }
             {(gameState === ASK_TOPIC) &&
                 <AskTopicView topicOptions={topicOptions} gameState={gameState} topic={topic}
-                              selectTopic={selectTopic}/>
+                              selectTopic={selectTopic} activePlayers={activePlayers}/>
             }
             {(gameState === SHOW_TOPIC) &&
                 <ShowTopicView topic={topic}/>
