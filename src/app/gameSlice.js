@@ -86,6 +86,11 @@ const postsSlice = createSlice({
             }
             console.log(`Reducer:  Game notification ${state.gameId} and ${JSON.stringify(state)}`);
         }),
+        playersStateNotification: ((state, action) => {
+            state.gameId = action.payload.gameId;
+            state.activePlayers = action.payload.players;
+            console.log(`Reducer:  Players notification ${state.gameId} and ${JSON.stringify(state)}`);
+        }),
         ready: ((state) => {
             state.ready = true;
             console.log(`Reducer: ready`);

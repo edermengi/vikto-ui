@@ -8,7 +8,9 @@ export class GameEvent {
     static ExitGame = '$exitGame'
     static Ready = '$ready'
     static UpdateUser = '$updateUser'
-    static GameStateNotification = '$gameStateNotification'
+    static RegisterUser = '$registerUser'
+    static GameStateNotification = '$gamePush'
+    static PlayersStateNotification = '$playersPush'
     static Answer = '$answer'
     static ChooseTopic = '$chooseTopic'
 }
@@ -26,12 +28,23 @@ function inMessage(data) {
 
 export const socketMiddleware = (storeAPI) => {
     let socket = null;
-    let pendingActions = [];
 
     function sendUpdateUser(userName, avatar) {
         socket.send(
             outMessage(
                 GameEvent.UpdateUser,
+                {
+                    userId: storeAPI.getState().game.userId,
+                    userName: userName,
+                    avatar: avatar
+                })
+        );
+    }
+
+    function registerUser(userName, avatar) {
+        socket.send(
+            outMessage(
+                GameEvent.RegisterUser,
                 {
                     userId: storeAPI.getState().game.userId,
                     userName: userName,
@@ -130,6 +143,9 @@ export const socketMiddleware = (storeAPI) => {
                     case GameEvent.GameStateNotification:
                         storeAPI.dispatch(gameActions.gameStateNotification(data.data));
                         break;
+                    case GameEvent.PlayersStateNotification:
+                        storeAPI.dispatch(gameActions.playersStateNotification(data.data));
+                        break;
                 }
             };
 
@@ -137,11 +153,7 @@ export const socketMiddleware = (storeAPI) => {
         }
 
         if (gameActions.connectionEstablished.match(action)) {
-            sendUpdateUser(storage.getUserName(), storage.getAvatar());
-            while (pendingActions.length) {
-                const action = pendingActions.shift();
-                action();
-            }
+            registerUser(storage.getUserName(), storage.getAvatar());
         }
 
         if (gameActions.nameUpdated.match(action) && isConnectionEstablished) {
