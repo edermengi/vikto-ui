@@ -7,3 +7,4 @@ export const SHOW_WINNER = 'SHOW_WINNER';
 
 export const QUIZ_TYPE_SELECT_ONE = "SELECT_ONE"
 export const QUIZ_TYPE_TYPE_ONE = "TYPE_ONE"
+export const QUIZ_TYPE_TYPE_ONE_FROM_SET = "TYPE_ONE_FROM_SET"

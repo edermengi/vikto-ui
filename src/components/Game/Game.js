@@ -19,7 +19,7 @@ import {Avataar} from "./Avataar";
 import {
     ASK_QUESTION,
     ASK_TOPIC,
-    QUIZ_TYPE_SELECT_ONE, QUIZ_TYPE_TYPE_ONE,
+    QUIZ_TYPE_SELECT_ONE, QUIZ_TYPE_TYPE_ONE, QUIZ_TYPE_TYPE_ONE_FROM_SET,
     SHOW_ANSWER,
     SHOW_TOPIC,
     SHOW_WINNER,
@@ -28,6 +28,7 @@ import {
 import {CheckCircle} from "@mui/icons-material";
 import SelectOneView from "./SelectOneView";
 import TypeOneView from "./TypeOneView";
+import TypeOneFromSetView from "./TypeOneFromSetView";
 
 
 const StyledBadge = styled(Badge)(({bgcolor}) => ({
@@ -203,6 +204,11 @@ const Game = () => {
                     {
                         question.quizType === QUIZ_TYPE_TYPE_ONE &&
                         <TypeOneView question={question} selectAnswer={selectAnswer} answer={answer}
+                                     gameState={gameState} activePlayers={activePlayers}/>
+                    }
+                    {
+                        question.quizType === QUIZ_TYPE_TYPE_ONE_FROM_SET &&
+                        <TypeOneFromSetView question={question} selectAnswer={selectAnswer} answer={answer}
                                      gameState={gameState} activePlayers={activePlayers}/>
                     }
                 </>
